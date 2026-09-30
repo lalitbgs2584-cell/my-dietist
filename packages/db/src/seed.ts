@@ -1,11 +1,21 @@
-import { db } from "./prisma/db";
+import { prisma } from "./index";
 
+async function main() {
+  const user = await prisma.user.create({
+    data: {
+      email: "test@gmail.com",
+      name: "testuser",
+    },
+  });
 
-const user = await db.orm.public.User.create({
-  email: "lalit@dietist.dev",
-  name: "Lalit",
-});
+  console.log("created user:", user);
+}
 
-console.log("created user:", user);
-
-await db.close();
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
